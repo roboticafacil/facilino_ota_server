@@ -33,6 +33,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
     QString action=request.getParameter("action");
     QString tmp_bin_file_name;
     QByteArray data;
+    //printf("OTA Upload service!\n");
     if ((QString::compare(action,"compile", Qt::CaseInsensitive)==0)||(QString::compare(action,"upload", Qt::CaseInsensitive)==0))
     {
         qWarning("OTA compile request received!");
@@ -87,6 +88,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         currentProcess = process;
 
         response.setHeader("Content-Type", "text/html; charset=ISO-8859-1");
+        response.setHeader("Access-Control-Allow-Headers","*");
         response.setHeader("Access-Control-Allow-Origin","*");
         response.write("<html><body>");
 

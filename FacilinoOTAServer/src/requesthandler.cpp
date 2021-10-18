@@ -41,10 +41,16 @@ void RequestHandler::service(HttpRequest& request, HttpResponse& response)
     if (path.startsWith("/usb_upload"))
     {
         USBUploadController().service(request, response,this->settings);
+        response.setHeader("Content-Type", "text/html; charset=ISO-8859-1");
+        response.setHeader("Access-Control-Allow-Origin","*");
+
     }
     else if (path.startsWith("/ota_upload"))
     {
+        //printf("OTA request\n");
         OTAUploadController().service(request, response,this->settings);
+
+
     }
     else if (path.startsWith("/list_ports"))
     {
@@ -65,9 +71,10 @@ void RequestHandler::service(HttpRequest& request, HttpResponse& response)
 
     // Set a response header
     response.setHeader("Content-Type", "text/html; charset=ISO-8859-1");
+    response.setHeader("Access-Control-Allow-Origin","*");
 
     // Return a simple HTML document
-    response.write("<html><body>To compile files, send GET to /upload.</body></html>",true);
+    response.write("<html><body>To compile files, send GET to /ota_upload.</body></html>",true);
 
     }
     qDebug("Conroller: finished request");
