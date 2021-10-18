@@ -151,11 +151,11 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         filePart.setBodyDevice(file);
 
         multiPart->append(filePart);
-        //QNetworkReply *reply = mgr.post(req,multiPart);
+        QNetworkReply *reply = mgr.post(req,multiPart);
         printf("Uploading code...");
         eventLoop.exec(); // blocks stack until "finished()" has been called
 
-        response.write("Done!<p>");
+        response.write("  Done!<p>");
         response.write("</body></html>",true);
     }
 }
