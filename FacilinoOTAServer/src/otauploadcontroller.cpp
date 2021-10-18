@@ -156,6 +156,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         eventLoop.exec(); // blocks stack until "finished()" has been called
 
         response.write("  Done!<p>");
+        printf(" done!");
         response.write("</body></html>",true);
     }
 }
