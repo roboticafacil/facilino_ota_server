@@ -74,12 +74,6 @@ void Startup::start()
     // Find the configuration file
     QString configFileName=searchConfigFile();
 
-    // Configure logging into a file
-    QSettings* logSettings=new QSettings(configFileName,QSettings::IniFormat,app);
-    logSettings->beginGroup("logging");
-    logger=new FileLogger(logSettings,10000,app);
-    logger->installMsgHandler();
-
     //Arduino
     QSettings* arduinoSettings=new QSettings(configFileName,QSettings::IniFormat,app);
     arduinoSettings->beginGroup("arduino");
@@ -90,6 +84,13 @@ void Startup::start()
     listenerSettings->beginGroup("listener");
     listener=new HttpListener(listenerSettings,new RequestHandler(app,arduinoSettings),app);
 
+    qDebug("Arduino-cli path: %s",qPrintable(listenerSettings->value("arduino_cli_path","C:/FacilinoOTAServer/arduino-cli/arduino-cli.exe").toString()));
+
+    // Configure logging into a file
+    QSettings* logSettings=new QSettings(configFileName,QSettings::IniFormat,app);
+    logSettings->beginGroup("logging");
+    logger=new FileLogger(logSettings,10000,app);
+    logger->installMsgHandler();
 
 
     qWarning("Startup: Service has started");

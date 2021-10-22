@@ -72,7 +72,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         arguments << "-e";
         arguments << tmp_file_name;
 
-        QString arduinoPath = settings->value("arduino_cli_path","C:/Facilino/arduino/arduino-cli.exe").toString();
+        QString arduinoPath = settings->value("arduino_cli_path","C:/FacilinoOTAServer/arduino-cli/arduino-cli.exe").toString();
 
         QString argString = QString("%1 %2\n").arg(arduinoPath).arg(arguments.join(" "));
 
