@@ -84,7 +84,7 @@ void Startup::start()
     listenerSettings->beginGroup("listener");
     listener=new HttpListener(listenerSettings,new RequestHandler(app,arduinoSettings),app);
 
-    qDebug("Arduino-cli path: %s",qPrintable(listenerSettings->value("arduino_cli_path","C:/FacilinoOTAServer/arduino-cli/arduino-cli.exe").toString()));
+    qDebug("Arduino-cli path: %s",qPrintable(arduinoSettings->value("arduino_cli_path").toString()));
 
     // Configure logging into a file
     QSettings* logSettings=new QSettings(configFileName,QSettings::IniFormat,app);
