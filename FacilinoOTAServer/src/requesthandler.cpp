@@ -57,17 +57,19 @@ void RequestHandler::service(HttpRequest& request, HttpResponse& response)
            updateSerialPorts();
            response.setHeader("Content-Type", "text/html; charset=ISO-8859-1");
            response.setHeader("Access-Control-Allow-Origin","*");
+           printf("Detected USB ports %d",serialPortList.length()); printf("\n");
            response.write("[");
-           for (int i=0;i<serialPortList.length()-1;i++)
+           for (int i=0;i<serialPortList.length();i++)
            {
                response.write(QString("\"%1\",").arg(serialPortList[i]).toUtf8());
            }
-           response.write(QString("\"%1\"").arg(serialPortList[serialPortList.length()-1]).toUtf8());
+           //qDebug("hello");
+           //printf("hello"); printf("\n");
            response.write("]",true);
     }
     else
     {
-    qDebug("Conroller: path=%s",path.data());
+    qDebug("Controller: path=%s",path.data());
 
     // Set a response header
     response.setHeader("Content-Type", "text/html; charset=ISO-8859-1");

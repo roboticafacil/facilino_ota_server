@@ -65,6 +65,7 @@ QString LogMessage::toString(const QString& msgFormat, const QString& timestampF
     decorated.replace("{function}",function);
     decorated.replace("{line}",QString::number(line));
 
+    //QString threadId=QString("0x%1").arg((int)QThread::currentThreadId(),16);
     QString threadId;
     threadId.sprintf("%p", QThread::currentThreadId());
     //threadId.setNum((uintptr_t)QThread::currentThreadId());

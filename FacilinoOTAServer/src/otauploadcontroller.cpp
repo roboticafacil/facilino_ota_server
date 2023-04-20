@@ -33,10 +33,11 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
     QString action=request.getParameter("action");
     QString tmp_bin_file_name;
     QByteArray data;
-    //printf("OTA Upload service!\n");
+    qDebug("OTA Upload service!\n");
+    printf("OTA Upload service!\n");
     if ((QString::compare(action,"compile", Qt::CaseInsensitive)==0)||(QString::compare(action,"upload", Qt::CaseInsensitive)==0))
     {
-        qWarning("OTA compile request received!");
+        qDebug("OTA compile request received!");
         QStringList arguments;
         QString code = request.getParameter("code");
         QString user = request.getParameter("user");
@@ -56,6 +57,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         }
 
         QString build_path=QDir(tmpDirName).filePath(QString("%1").arg(settings->value("tmp_build_dir","build").toString()));
+        qDebug("%s",qUtf8Printable(build_path));
         printf("%s",qUtf8Printable(build_path)); printf("\n");
         QDir build_dir(build_path);
         if (build_dir.exists() == true) {
@@ -76,6 +78,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
 
         QString argString = QString("%1 %2\n").arg(arduinoPath).arg(arguments.join(" "));
 
+        qDebug("%s",qUtf8Printable(argString));
         printf("%s",qUtf8Printable(argString)); printf("\n");
 
         QProcess *process = new QProcess();
@@ -111,6 +114,7 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
         else
             compilation_flags_reduced=compilation_flags.replace(":",".");
 
+        qDebug("%s",qUtf8Printable(tmpDirName));
         printf("%s",qUtf8Printable(tmpDirName)); printf("\n");
         tmp_bin_file_name = QDir(build_path).filePath(QString("%1").arg(compilation_flags_reduced)+QDir::separator()+QString("%1-%2.ino.bin").arg(settings->value("tmp_file_name","temp").toString()).arg(user));
         QString tmp_bin_file_name_short = QString("temp")+QDir::separator()+QString("temp-%1").arg(user)+QDir::separator()+QString("build")+QDir::separator()+QString("%1").arg(compilation_flags_reduced)+QDir::separator()+QString("%1-%2.ino.bin").arg(settings->value("tmp_file_name","temp").toString()).arg(user);
@@ -123,6 +127,8 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
             if (outFile.open(QIODevice::ReadOnly))
                 data=outFile.readAll();
         }
+
+        qDebug("Data length: %d",data.length());
         printf("Data length: %d",data.length()); printf("\n");
 
         response.write(QString("Hex file:%1<br/>").arg(tmp_bin_file_name_short).toUtf8());
@@ -154,10 +160,12 @@ void OTAUploadController::service(HttpRequest& request, HttpResponse& response, 
 
         multiPart->append(filePart);
         QNetworkReply *reply = mgr.post(req,multiPart);
+        qDebug("Uploading code...");
         printf("Uploading code...");
         eventLoop.exec(); // blocks stack until "finished()" has been called
 
         response.write("  Done!<p>");
+        qDebug(" done!");
         printf(" done!");
         response.write("</body></html>",true);
     }
@@ -192,6 +200,7 @@ QByteArray OTAUploadController::fileChecksum(const QString &fileName, QCryptogra
 }
 
 void OTAUploadController::onProcessFinished(int exitCode) {
+    qDebug("Finished with code: %d.\n",exitCode);
     printf("Finished with code: %d.\n",exitCode);
     currentResponse->write(QString("Finished with code: %1\n").arg(exitCode).toUtf8());
     currentResponse->write("<br/>");
@@ -199,12 +208,14 @@ void OTAUploadController::onProcessFinished(int exitCode) {
 }
 
 void OTAUploadController::onProcessOutputUpdated() {
+    qDebug("%s",qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
     printf("%s",qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
     currentResponse->write(".");
     currentResponse->flush();
 }
 
 void OTAUploadController::onProcessStarted() {
+    qDebug("Building...\n");
     printf("Building...\n");
     currentResponse->write("Building...");
     currentResponse->write("<br/>");

@@ -72,7 +72,7 @@ void USBUploadController::service(HttpRequest& request, HttpResponse& response, 
 
         QString argString = QString("%1 %2\n").arg(arduinoPath).arg(arguments.join(" "));
 
-        //qInfo("%s",qUtf8Printable(argString));
+        qWarning("%s",qUtf8Printable(argString));
         printf("%s",qUtf8Printable(argString)); printf("\n");
 
         QProcess *process = new QProcess();
@@ -113,7 +113,7 @@ void USBUploadController::service(HttpRequest& request, HttpResponse& response, 
     }
     else if (QString::compare(action,"compile", Qt::CaseInsensitive)==0)
     {
-        qWarning("USB compile request received!");
+        qDebug("USB compile request received!");
         QStringList arguments;
         QString code = request.getParameter("code");
         QString user = request.getParameter("user");
@@ -148,7 +148,7 @@ void USBUploadController::service(HttpRequest& request, HttpResponse& response, 
 
         QString argString = QString("%1 %2\n").arg(arduinoPath).arg(arguments.join(" "));
 
-        //qInfo("%s",qUtf8Printable(argString));
+        qWarning("%s",qUtf8Printable(argString));
         printf("%s",qUtf8Printable(argString)); printf("\n");
 
         QProcess *process = new QProcess();
@@ -212,12 +212,12 @@ QString USBUploadController::relativePath(const QSettings *settings, const QStri
         return QDir(QCoreApplication::applicationDirPath()).
                 filePath(settingsValue);
     }
-    //qDebug("%s",qUtf8Printable(settingsValue));
+    qWarning("%s",qUtf8Printable(settingsValue));
     return settingsValue;
 }
 
 void USBUploadController::onProcessFinished(int exitCode) {
-    //qDebug("Finished with code: %d.",exitCode);
+    qWarning("Finished with code: %d.",exitCode);
     printf("Finished with code: %d.\n",exitCode);
     currentResponse->write(QString("Finished with code: %1\n").arg(exitCode).toUtf8());
     currentResponse->write("<br/>");
@@ -225,7 +225,7 @@ void USBUploadController::onProcessFinished(int exitCode) {
 }
 
 void USBUploadController::onProcessOutputUpdated() {
-    //qDebug("%s",qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
+    qWarning("%s",qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
     printf("%s",qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
     currentResponse->write(qUtf8Printable(QString(currentProcess->readAllStandardOutput())));
     //currentResponse->write(".");
@@ -233,7 +233,7 @@ void USBUploadController::onProcessOutputUpdated() {
 }
 
 void USBUploadController::onProcessStarted() {
-    //qDebug("Building...");
+    qWarning("Building...");
     printf("Building...\n");
     currentResponse->write("Building...");
     currentResponse->write("<br/>");

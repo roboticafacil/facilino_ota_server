@@ -60,7 +60,7 @@
     #define DECLSPEC
 #endif
 
-class QStringList;
+//class QStringList;
 class QtServiceControllerPrivate;
 
 class DECLSPEC QtServiceController
